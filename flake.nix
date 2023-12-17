@@ -31,11 +31,6 @@
                 gputils
                 
             ];
-
-            buildInputs = with pkgs; [
-                simulide
-            ];
-
             buildPhase = ''
                 make all
             '';
@@ -44,7 +39,7 @@
                 mkdir -p $out
                 mkdir -p $out/simu
                 mkdir -p $out/bin
-                cp simu/circuito.simu $out/simu
+                cp simu/circuit.simu $out/simu
                 cp main.hex $out
             ''; 
         };
@@ -54,11 +49,11 @@
         packages.${system} = { 
             default = pkgs.symlinkJoin {
             name = "simulation";
-            paths = with pkgs; [ counterpic pkgs.simulide ];
+            paths = with pkgs; [ counterpic simulide ];
             postBuild = ''
-                sed -i "s|\.\./main\.hex|$out/main.hex|g" $out/simu/circuito.simu
+                sed -i "s|circuit\.hex|$out/main.hex|g" $out/simu/circuit.simu
                 echo "#!/bin/sh" > $out/bin/simulation
-                echo "$out/bin/simulide $out/simu/circuito.simu" >> $out/bin/simulation
+                echo "$out/bin/simulide $out/simu/circuit.simu" >> $out/bin/simulation
                 chmod +x $out/bin/simulation
             '';
         };
