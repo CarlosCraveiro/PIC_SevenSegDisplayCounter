@@ -3,17 +3,9 @@
   inputs = { 
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable"; 
     carlospkgs.url = "github:CarlosCraveiro/nixpkgs/master";
-    #carlospkgs.inputs.nixpkgs.follows = "nixpkgs";
-            };
+    };
 
   outputs = { self, nixpkgs, carlospkgs, ... }:
-   # let
-   #   system = "x86_64-linux";
-   #   pkgs = import nixpkgs {
-   #     system = "x86_64-linux";
-   #     config.allowUnfree = true;
-   #   };
-
     let
         system = "x86_64-linux";
         carlospkgs-overlay = final: prev: {
@@ -42,7 +34,7 @@
             gnumake
         ];
         text = ''
-          simulide simu/circuito.simu
+          make all && simulide simu/circuito.simu
         '';
       };
     };
