@@ -12,9 +12,22 @@ The project should be implemented in C programming language and should perform a
 - The **clock frequency** of the PIC must be **8 MHz** (HS external crystal).
 
 ## Guide throught the project
-TODO...
-
 ### Project organization
+The project is organized as follows:
+```bash
+PIC_SevenSegDisplayCounter
+├── flake.lock          # Specifies program versions
+├── flake.nix           # Main Nix project file
+├── LICENSE
+├── Makefile            # Project's Makefile
+├── README.md
+├── shell.nix           # Describes the development enviroment used
+├── simu
+│   ├── circuit.hex     # Pre-compiled Hex file for the simulation
+│   └── circuit.simu    # Simulation File for SimulIDE
+└── src
+    └── main.c          # Actual Source Code
+```
 ### Set everything up
 ### Complile the source
 ### Run Simulation
@@ -23,7 +36,15 @@ TODO...
 TODO..
 
 ## Bill Of Materials
-TODO...
+This *BOM* refers to the components used on the SimulIDE simulation `simu/circuit.simu`
+
+- **Push-24** : Push Button
+- **Push-25** : Push Button
+- **Resistor-33** : Resistor 1 kΩ
+- **Resistor-34** : Resistor 1 kΩ
+- **ResistorDip-2** : ResistorDip 150 Ω
+- **Seven Segment-13** : Seven Segment Display Common Cathode
+- **pic18f4550-1** : pic18f4550 microcontroler
 
 ## Authors
 - Carlos Henrique Craveiro Aquino Veras - 12547187 - @CarlosCraveiro
