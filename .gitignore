@@ -1,0 +1,6 @@
+# SDCC Files
+*.asm
+*.cod
+*.lst
+main.hex
+*.o
