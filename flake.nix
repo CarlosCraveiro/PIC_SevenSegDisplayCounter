@@ -21,11 +21,8 @@
             config.allowUnfree = true;
             overlays = [ sdcc-overlay carlospkgs-overlay ];
 
-        }; 
-    in {
-      
-        #devShells.${system}.default = import ./shell.nix { inherit pkgs; };
-        packages.${system}.default = with import nixpkgs { system = "x86_64-linux"; };  stdenv.mkDerivation {
+        };
+                counterpic = with import nixpkgs { system = "x86_64-linux"; };  stdenv.mkDerivation {
             name = "counterpic";
             src = self;
             
@@ -42,12 +39,12 @@
 
             buildPhase = ''
                 make all
-                
                 echo "#!/bin/sh" > counterpic
-                echo "simulide $out/simu/circuito.simu" >> counterpic
+                echo "echo $out" >> counterpic
                 chmod +x counterpic
             '';
 
+                #echo "ls && $out/bin/simulide $out/simu/circuito.simu" >> counterpic
             installPhase = ''
                 mkdir -p $out
                 mkdir -p $out/simu
@@ -58,7 +55,13 @@
             '';
             #meta.mainProgram = "counterpic";
         };
-      /*  defaultPackage.${system}.default = pkgs.writeShellApplication {
+    in {
+      
+        #devShells.${system}.default = import ./shell.nix { inherit pkgs; };
+                packages.${system} = { 
+
+/*
+    default = pkgs.writeShellApplication {
         name = "counterpic";
         runtimeInputs = with pkgs; [ 
             gputils
@@ -67,8 +70,20 @@
             gnumake
         ];
         text = ''
-          make all && simulide simu/circuito.simu
+          cd $out && make all && simulide simu/circuito.simu
         '';
       };*/
+
+        default = pkgs.symlinkJoin {
+            name = "simulation";
+            paths = with pkgs; [ counterpic pkgs.simulide ];
+            postBuild = ''
+                sed -i "s|\.\./main\.hex|$out/main.hex|g" $out/simu/circuito.simu
+                echo "#!/bin/sh" > $out/bin/simulation
+                echo "$out/bin/simulide $out/simu/circuito.simu" >> $out/bin/simulation
+                chmod +x $out/bin/simulation
+            '';
+        };
+};
     };
 }
