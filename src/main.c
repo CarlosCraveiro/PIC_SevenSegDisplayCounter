@@ -1,6 +1,4 @@
 #include <pic18fregs.h>
-//#include <delay.h>
-//#include <stdint.h>
 
 /* FUSES START */
 /* Minimum modifications needed. Rest of fuses left as default. */
@@ -46,7 +44,8 @@ unsigned int ssg_lut[10];
     (VALUE >= 0 && VALUE <= 9)? ssg_lut[VALUE] : 0x00 \
 )
 
-// Initializes the Seven Segments Display LUT
+/* Initializes the Seven Segments Display LUT */
+/* Pattern used considering a Common Cathode SSG Display */
 void configure_ssg_lut(void) {
     ssg_lut[0] = 0x3F;
     ssg_lut[1] = 0x06;
@@ -74,26 +73,27 @@ void configure_microcontroler(void) {
 
 /* Set up Global Interrupts */
 void setup_interrupts(void) {
-    // General Interrupt configuration
-    INTCONbits.GIEH = 1;
-    INTCONbits.GIEL = 1;
-    RCONbits.IPEN = 1;
+    /* General Interrupt configuration */
+    INTCONbits.GIEH = 1;    // Enables High Priority Interrupts
+    INTCONbits.GIEL = 1;    // Enables Low Priority Interrupts
+    RCONbits.IPEN = 1;      // Enable priority levels for interrupts (handle both high and low)
 
-    // Enable and priorizes timer interrupts
-    INTCONbits.TMR0IF = 0;
-    INTCONbits.TMR0IE = 1;
-    INTCON2bits.TMR0IP = 1;
+    /* Enable and priorizes timer interrupts */
+    ISR_TIMER_FLAG = 0;     // Clears Interrupt Timer Flag 
+    INTCONbits.TMR0IE = 1;  // Enable Timer0 Interrupt
+    INTCON2bits.TMR0IP = 1; // Set Timer0 Interrupt as a High Priority Interrupt
 
-    // Enable and priorizes external interrupts
-    INTCONbits.INT0IF = 0;
-    INTCON3bits.INT1IF = 0;
-    INTCON3bits.INT1IP = 1;
-    INTCONbits.INT0IE = 1;
-    INTCON3bits.INT1IE = 1;
+    /* Enable and priorizes external interrupts */
+    ISR_RB0_FLAG = 0;       // Clears Interrupt for RB0(INT0) Flag
+    ISR_RB1_FLAG = 0;       // Clears Interrupt for RB1(INT1) Flag
+    INTCON3bits.INT1IP = 0; // Set Priority INT1 to high
+                            // Priority of INT0 is immutably High 
+    INTCONbits.INT0IE = 1;  // Enable INT0 as External Interrupt
+    INTCON3bits.INT1IE = 1; // Enable INT1 as External Interrupt
 
     // Sets interruption to rising edge trigger
-    INTCON2bits.INTEDG0 = 1;
-    INTCON2bits.INTEDG1 = 1;
+    INTCON2bits.INTEDG0 = 1;// rising edge for INT0
+    INTCON2bits.INTEDG1 = 1;// rising edge for INT1
 }
 
 /* Setups Timer0 */
@@ -121,10 +121,10 @@ void enable_count() {
     reset_timer();
 }
 
-/* The main interrupt, code */
+/* High Interrupt Service Routine (Deals with INT0 and Timer0 Interrupt) */
 void high_isr(void) __interrupt(1) {
     // Checks for timer interrupt
-    if (ISR_TIMER_FLAG == 1 && count_enable) {
+    if (count_enable && ISR_TIMER_FLAG == 1) {
 
         if (++counter >= 10) counter = 0; // Increments counter and ensures the loop 0-9
         
@@ -134,7 +134,7 @@ void high_isr(void) __interrupt(1) {
         
         ISR_TIMER_FLAG = 0; // Clears Interrupt Service Routine Flag
     }
-
+    
     // Checks RB0 Interrupt
     if (ISR_RB0_FLAG == 1) {
         // Sets period to 1s
@@ -145,7 +145,10 @@ void high_isr(void) __interrupt(1) {
         
         ISR_RB0_FLAG = 0; // Clears Interrupt Service Routine Flag
     }
+}
 
+/* Low Interrupt Service Routine (Deals with INT1) */
+void low_isr(void) __interrupt(2) {
     // Checks RB1 Interrupt
     if (ISR_RB1_FLAG == 1) { 
         // Sets period to 0.25s
@@ -177,9 +180,9 @@ void main() {
 
     /* Main Loop */
     while(1) {
-    // Clears the Watchdog since the flag to disable watchdog is not working on SDCC
         __asm
             CLRWDT 
         __endasm;
+    /* Clears the Watchdog since the flag to disable watchdog is not working on SDCC */
     }
 }
