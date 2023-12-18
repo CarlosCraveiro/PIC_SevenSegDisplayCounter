@@ -32,8 +32,8 @@ PIC_SevenSegDisplayCounter
 ### Complile the source
 ### Run Simulation
 
-## C Code detailed 
-TODO..
+## Documentation and Further Explanations 
+Additional explanations can be found at the [Project's Wiki](https://github.com/CarlosCraveiro/PIC_SevenSegDisplayCounter/wiki)
 
 ## Bill Of Materials
 This *BOM* refers to the components used on the SimulIDE simulation `simu/circuit.simu`
