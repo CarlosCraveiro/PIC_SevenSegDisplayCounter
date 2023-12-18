@@ -4,3 +4,4 @@
 *.lst
 main.hex
 *.o
+result
