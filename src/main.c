@@ -86,7 +86,7 @@ void setup_interrupts(void) {
     /* Enable and priorizes external interrupts */
     ISR_RB0_FLAG = 0;       // Clears Interrupt for RB0(INT0) Flag
     ISR_RB1_FLAG = 0;       // Clears Interrupt for RB1(INT1) Flag
-    INTCON3bits.INT1IP = 0; // Set Priority INT1 to high
+    INTCON3bits.INT1IP = 0; // Set Priority INT1 to low
                             // Priority of INT0 is immutably High 
     INTCONbits.INT0IE = 1;  // Enable INT0 as External Interrupt
     INTCON3bits.INT1IE = 1; // Enable INT1 as External Interrupt
