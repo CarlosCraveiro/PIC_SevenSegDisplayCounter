@@ -2,6 +2,7 @@
 *.asm
 *.cod
 *.lst
+*.dis
 main.hex
 *.o
 result

@@ -29,8 +29,41 @@ PIC_SevenSegDisplayCounter
     └── main.c          # Actual Source Code
 ```
 ### Set everything up
+This project uses [Nix](https://nixos.org/) as a package manager
+This is needed even if you want to just test the project.
+Ensure you have `nix` installed on your linux distribuition.
+```bash
+nix --experimental-features 'nix-command flakes'
+```
+### Just test the project with Flakes without having to Clone the Repo
+```bash
+nix run github:CarlosCraveiro/PIC_SevenSegDisplayCounter
+```
+
 ### Complile the source
+Next steps will only work if you have clonned this repo.
+```bash
+cd PIC_SevenSegDisplayCounter/
+nix develop .
+```
+and
+```bash
+make all
+```
+or
+```bash
+nix build .
+```
+
 ### Run Simulation
+Next steps will only work if you have clonned this repo.
+```bash
+simulide simu/circuit.simu
+```
+Ensures that your hex file is the one you compiled it. Or...
+```bash
+nix run .
+```
 
 ## Documentation and Further Explanations 
 Additional explanations can be found at the [Project's Wiki](https://github.com/CarlosCraveiro/PIC_SevenSegDisplayCounter/wiki)
