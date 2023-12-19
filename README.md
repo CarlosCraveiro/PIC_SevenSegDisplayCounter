@@ -65,6 +65,9 @@ Ensures that your hex file is the one you compiled it. Or...
 nix run .
 ```
 
+If everything works as expected you should see this schematics:
+![Project's Schematics](https://github.com/CarlosCraveiro/PIC_SevenSegDisplayCounter/blob/main/images/ProjectSchematic.png)
+
 ## Documentation and Further Explanations 
 Additional explanations can be found at the [Project's Wiki](https://github.com/CarlosCraveiro/PIC_SevenSegDisplayCounter/wiki)
 
